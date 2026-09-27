@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class EventController extends Controller
@@ -36,12 +37,22 @@ class EventController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'organizer' => 'required|string|max:255',
+            'logo_image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'event_date' => 'required|date',
             'location' => 'nullable|string|max:255',
             'signer_name' => 'required|string|max:255',
             'signer_position' => 'required|string|max:255',
+            'signature_image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'certificate_prefix' => 'required|string|max:50',
         ]);
+
+        if ($request->hasFile('logo_image')) {
+            $validated['logo_image'] = $request->file('logo_image')->store('logos', 'public');
+        }
+
+        if ($request->hasFile('signature_image')) {
+            $validated['signature_image'] = $request->file('signature_image')->store('signatures', 'public');
+        }
 
         $event = Event::create($validated);
 
@@ -79,12 +90,28 @@ class EventController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'organizer' => 'required|string|max:255',
+            'logo_image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'event_date' => 'required|date',
             'location' => 'nullable|string|max:255',
             'signer_name' => 'required|string|max:255',
             'signer_position' => 'required|string|max:255',
+            'signature_image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'certificate_prefix' => 'required|string|max:50',
         ]);
+
+        if ($request->hasFile('logo_image')) {
+            if ($event->logo_image) {
+                Storage::disk('public')->delete($event->logo_image);
+            }
+            $validated['logo_image'] = $request->file('logo_image')->store('logos', 'public');
+        }
+
+        if ($request->hasFile('signature_image')) {
+            if ($event->signature_image) {
+                Storage::disk('public')->delete($event->signature_image);
+            }
+            $validated['signature_image'] = $request->file('signature_image')->store('signatures', 'public');
+        }
 
         $event->update($validated);
 
@@ -94,6 +121,13 @@ class EventController extends Controller
 
     public function destroy(Event $event): RedirectResponse
     {
+        if ($event->logo_image) {
+            Storage::disk('public')->delete($event->logo_image);
+        }
+        if ($event->signature_image) {
+            Storage::disk('public')->delete($event->signature_image);
+        }
+
         $event->delete();
 
         return redirect()->route('events.index')

@@ -17,7 +17,7 @@
             Edit Data Acara
         </h1>
 
-        <form action="{{ route('events.update', $event) }}" method="POST" class="mt-6 space-y-6">
+        <form action="{{ route('events.update', $event) }}" method="POST" enctype="multipart/form-data" class="mt-6 space-y-6">
             @csrf
             @method('PUT')
 
@@ -57,6 +57,30 @@
                 </div>
 
                 <div>
+                    <label for="logo_image" class="block text-sm font-semibold text-slate-700 mb-1">
+                        Ganti Logo Instansi (Opsional)
+                    </label>
+                    <input
+                        type="file"
+                        id="logo_image"
+                        name="logo_image"
+                        accept="image/png,image/jpeg,image/svg+xml"
+                        class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 border border-slate-200 rounded-xl"
+                    >
+                    @if($event->logo_image)
+                        <div class="mt-2 flex items-center space-x-2">
+                            <img src="{{ asset('storage/' . $event->logo_image) }}" alt="Logo Saat Ini" class="h-8 max-w-xs object-contain border p-1 rounded bg-slate-50">
+                            <span class="text-xs text-slate-400">Logo aktif</span>
+                        </div>
+                    @endif
+                    @error('logo_image')
+                        <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
                     <label for="event_date" class="block text-sm font-semibold text-slate-700 mb-1">
                         Tanggal Pelaksanaan <span class="text-rose-500">*</span>
                     </label>
@@ -72,9 +96,7 @@
                         <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-            </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="location" class="block text-sm font-semibold text-slate-700 mb-1">
                         Lokasi / Platform
@@ -87,23 +109,23 @@
                         class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                 </div>
+            </div>
 
-                <div>
-                    <label for="certificate_prefix" class="block text-sm font-semibold text-slate-700 mb-1">
-                        Awalan Nomor Sertifikat <span class="text-rose-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="certificate_prefix"
-                        name="certificate_prefix"
-                        required
-                        value="{{ old('certificate_prefix', $event->certificate_prefix) }}"
-                        class="w-full px-4 py-2.5 border @error('certificate_prefix') border-rose-300 @else border-slate-200 @enderror rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    >
-                    @error('certificate_prefix')
-                        <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+            <div>
+                <label for="certificate_prefix" class="block text-sm font-semibold text-slate-700 mb-1">
+                    Awalan Nomor Sertifikat <span class="text-rose-500">*</span>
+                </label>
+                <input
+                    type="text"
+                    id="certificate_prefix"
+                    name="certificate_prefix"
+                    required
+                    value="{{ old('certificate_prefix', $event->certificate_prefix) }}"
+                    class="w-full px-4 py-2.5 border @error('certificate_prefix') border-rose-300 @else border-slate-200 @enderror rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                @error('certificate_prefix')
+                    <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <div>
@@ -154,6 +176,28 @@
                             <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+
+                <div class="mt-4">
+                    <label for="signature_image" class="block text-sm font-semibold text-slate-700 mb-1">
+                        Ganti Tanda Tangan Digital / Basah (PNG Transparan, Opsional)
+                    </label>
+                    <input
+                        type="file"
+                        id="signature_image"
+                        name="signature_image"
+                        accept="image/png,image/jpeg,image/svg+xml"
+                        class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 border border-slate-200 rounded-xl"
+                    >
+                    @if($event->signature_image)
+                        <div class="mt-2 flex items-center space-x-2">
+                            <img src="{{ asset('storage/' . $event->signature_image) }}" alt="Tanda Tangan Saat Ini" class="h-10 max-w-xs object-contain border p-1 rounded bg-slate-50">
+                            <span class="text-xs text-slate-400">Tanda tangan aktif</span>
+                        </div>
+                    @endif
+                    @error('signature_image')
+                        <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 

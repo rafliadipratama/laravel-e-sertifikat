@@ -267,6 +267,11 @@
     <div class="content-box">
         <!-- Header -->
         <div class="header-section">
+            @if(isset($logoBase64) && $logoBase64)
+                <div style="margin-bottom: 1.5mm;">
+                    <img src="{{ $logoBase64 }}" style="max-height: 11mm; max-width: 50mm;" />
+                </div>
+            @endif
             <div class="organizer-name">{{ $certificate->event->organizer }}</div>
             <div class="main-title">SERTIFIKAT PENGHARGAAN</div>
             <div class="sub-title">CERTIFICATE OF APPRECIATION</div>
@@ -316,8 +321,15 @@
                             Diterbitkan pada {{ $certificate->issue_date->format('d F Y') }}
                         </div>
                         <div style="text-align: right;">
-                            <div class="signature-name">{{ $certificate->event->signer_name }}</div>
-                            <div class="signature-position">{{ $certificate->event->signer_position }}</div>
+                            <div style="display: inline-block; text-align: center; min-width: 55mm;">
+                                @if(isset($signatureBase64) && $signatureBase64)
+                                    <div style="margin-bottom: -3mm;">
+                                        <img src="{{ $signatureBase64 }}" style="height: 14mm; max-width: 50mm;" />
+                                    </div>
+                                @endif
+                                <div class="signature-name">{{ $certificate->event->signer_name }}</div>
+                                <div class="signature-position">{{ $certificate->event->signer_position }}</div>
+                            </div>
                         </div>
                     </td>
                 </tr>

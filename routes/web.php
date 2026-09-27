@@ -22,6 +22,7 @@ Route::get('/events/{event}/certificates/create', [CertificateController::class,
 Route::post('/events/{event}/certificates', [CertificateController::class, 'store'])->name('certificates.store');
 Route::get('/events/{event}/certificates/bulk', [CertificateController::class, 'bulkCreate'])->name('certificates.bulk.create');
 Route::post('/events/{event}/certificates/bulk', [CertificateController::class, 'bulkStore'])->name('certificates.bulk.store');
+Route::get('/events/{event}/certificates/zip', [CertificateController::class, 'downloadZip'])->name('events.certificates.zip');
 
 // PDF Sertifikat
 Route::get('/certificates/{certificate}/pdf', [CertificateController::class, 'showPdf'])->name('certificates.pdf.show');

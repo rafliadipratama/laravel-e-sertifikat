@@ -91,4 +91,24 @@ class CertificateTest extends TestCase
             'certificate_number' => 'TEST/CERT/0002',
         ]);
     }
+
+    public function test_bulk_certificate_creation_via_text(): void
+    {
+        $response = $this->post('/events/' . $this->event->id . '/certificates/bulk', [
+            'participants_data' => "Siti Nurhaliza, siti@test.com, Moderator\nAhmad Fauzi, ahmad@test.com, Peserta",
+            'default_role' => 'Peserta',
+            'issue_date' => now()->toDateString(),
+        ]);
+
+        $response->assertRedirect('/events/' . $this->event->id);
+        $this->assertDatabaseHas('certificates', ['recipient_name' => 'Siti Nurhaliza']);
+        $this->assertDatabaseHas('certificates', ['recipient_name' => 'Ahmad Fauzi']);
+    }
+
+    public function test_download_all_certificates_as_zip(): void
+    {
+        $response = $this->get('/events/' . $this->event->id . '/certificates/zip');
+        $response->assertStatus(200);
+        $this->assertEquals('application/zip', $response->headers->get('content-type'));
+    }
 }

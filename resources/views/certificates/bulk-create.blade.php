@@ -15,12 +15,12 @@
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
         <div class="border-b border-slate-100 pb-4">
             <h1 class="text-xl font-bold text-slate-900">
-                Penerbitan Sertifikat Massal (Bulk)
+                Penerbitan Sertifikat Massal (Bulk / Import)
             </h1>
             <p class="text-xs text-slate-500 mt-1">Acara: <strong class="text-slate-700">{{ $event->title }}</strong></p>
         </div>
 
-        <form action="{{ route('certificates.bulk.store', $event) }}" method="POST" class="mt-6 space-y-6">
+        <form action="{{ route('certificates.bulk.store', $event) }}" method="POST" enctype="multipart/form-data" class="mt-6 space-y-6">
             @csrf
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -56,18 +56,38 @@
                 </div>
             </div>
 
-            <div>
-                <label for="participants_data" class="block text-sm font-semibold text-slate-700 mb-1">
-                    Daftar Nama Peserta (1 baris per orang) <span class="text-rose-500">*</span>
+            <!-- Option 1: File CSV Upload -->
+            <div class="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-5 space-y-2">
+                <label for="csv_file" class="block text-sm font-bold text-slate-800">
+                    Opsi 1: Upload Berkas Spreadsheet (.CSV)
                 </label>
-                <p class="text-xs text-slate-500 mb-2">
-                    Format yang didukung: <code class="bg-slate-100 px-1 py-0.5 rounded text-indigo-700">Nama Lengkap</code> atau <code class="bg-slate-100 px-1 py-0.5 rounded text-indigo-700">Nama Lengkap, email@example.com</code> atau <code class="bg-slate-100 px-1 py-0.5 rounded text-indigo-700">Nama Lengkap, email, Peran</code>
+                <p class="text-xs text-slate-500">
+                    Dapat langsung mengekspor daftar hadir dari Google Spreadsheet atau Microsoft Excel ke format <code class="font-mono bg-white px-1 py-0.5 rounded border border-indigo-200">.csv</code> (Kolom: Nama, Email, Peran).
+                </p>
+                <input
+                    type="file"
+                    id="csv_file"
+                    name="csv_file"
+                    accept=".csv,text/csv"
+                    class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 border border-slate-200 rounded-xl bg-white"
+                >
+                @error('csv_file')
+                    <p class="text-xs text-rose-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Option 2: Copy-Paste Textarea -->
+            <div class="space-y-2">
+                <label for="participants_data" class="block text-sm font-bold text-slate-800">
+                    Opsi 2: Salin-Tempel Teks (1 baris per nama)
+                </label>
+                <p class="text-xs text-slate-500">
+                    Format: <code class="bg-slate-100 px-1 py-0.5 rounded text-indigo-700">Nama Lengkap</code> atau <code class="bg-slate-100 px-1 py-0.5 rounded text-indigo-700">Nama Lengkap, email@example.com</code> atau <code class="bg-slate-100 px-1 py-0.5 rounded text-indigo-700">Nama Lengkap, email, Peran</code>
                 </p>
                 <textarea
                     id="participants_data"
                     name="participants_data"
-                    rows="8"
-                    required
+                    rows="6"
                     placeholder="Budi Setiawan&#10;Siti Rahmawati, siti@example.com&#10;Ahmad Fauzi, ahmad@example.com, Narasumber"
                     class="w-full font-mono text-sm px-4 py-3 border @error('participants_data') border-rose-300 @else border-slate-200 @enderror rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >{{ old('participants_data') }}</textarea>
